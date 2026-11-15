@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apna Paisa - Apna Kaam, Apna Paisa</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#0B1026;color:#fff;max-width:480px;margin:0 auto;min-height:100vh}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#111633;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:8px}
+.logo{font-weight:900;font-size:20px}.logo span{color:#a78bfa}.live{font-size:11px;background:#14532d;padding:5px 10px;border-radius:999px}
+.btn{background:linear-gradient(135deg,#7C3AED,#4c1d95);color:#fff;border:0;padding:12px 16px;border-radius:14px;cursor:pointer;font-weight:700;width:100%;margin:6px 0}
+.btn2{background:#fff;color:#111;border:0;padding:12px 16px;border-radius:14px;cursor:pointer;font-weight:700;width:100%;margin:6px 0}
+.card{background:#1A2040;border:1px solid #2d3566;border-radius:22px;padding:18px;margin:14px 16px}
+.wallet{background:linear-gradient(135deg,#7C3AED,#1e1b4b,#0B1026)}
+.wallet b{font-size:36px;display:block}input,select{width:100%;padding:13px;border-radius:12px;border:1px solid #374151;background:#0B1026;color:#fff;margin:6px 0}
+label{font-size:12px;color:#c7d2fe}.task{background:#111633;border:1px solid #2d3566;border-radius:16px;padding:14px;margin:10px 0}
+.badge{background:#facc15;color:#000;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#111633;display:none;justify-content:space-around;padding:10px 0 14px;border-top:1px solid #2d3566;z-index:20}
+.bottom button{background:transparent;border:0;color:#94a3b8;cursor:pointer;font-size:11px;padding:8px}.bottom button.on{color:#fff;background:#7C3AED;border-radius:12px}
+.pink{background:#2a0a2e;border-color:#ec4899}.easynum{font-size:28px;font-weight:900;letter-spacing:1px;word-break:break-all}
+.hidden{display:none}.center{text-align:center}
+</style></head>
+<body>
+<header><div class="logo">🪙 Apna <span>Paisa</span></div><div><span class="live" id="live">● LIVE</span> <button id="topLogin" onclick="show('login')" style="background:#fff;border:0;padding:8px 14px;border-radius:999px;font-weight:700;cursor:pointer">Login</button></div></header>
+<div id="view-landing">
+<div class="card center"><div style="font-size:52px">🪙</div><h1 style="font-size:32px;margin:8px 0">Apna Paisa</h1><p style="color:#c7d2fe">Apna Kaam, Apna Paisa</p><p style="color:#94a3b8;font-size:14px">Task karo • Proof do • Admin verify karega • Reward wallet me</p>
+<button class="btn" onclick="show('signup')">Create Account - Free</button><button class="btn2" onclick="show('login')">Login</button>
+<p style="font-size:12px;color:#94a3b8">No OTP • Direct Signup • Deposit Easypaisa 03493959558 • Withdraw Har Bank Min Rs 10</p></div>
+<div class="card"><h3>Kaise Kaam Karta Hai?</h3><p>1. Account banao<br>2. Task dekho<br>3. Proof submit karo<br>4. Admin approve karega → Reward wallet me</p></div>
+<div class="card"><h3>Deposit</h3><p>Easypaisa: <b>03493959558</b> pe bhejo + TID likho</p><h3>Withdrawal</h3><p>Har Bank me • Minimum <b>Rs 10</b> • Fee Rs 0</p></div>
+</div>
+<div id="view-signup" class="hidden"><div class="card"><h2>Create Account</h2><p style="color:#94a3b8;font-size:13px">Simple - No OTP</p>
+<label>Full Name</label><input id="su_name" placeholder="Apna naam"><label>Username</label><input id="su_user" placeholder="username"><label>Email or Phone</label><input id="su_contact" placeholder="Email ya 03xx-xxxxxxx"><label>Password</label><input id="su_pass" type="password" placeholder="Password"><label>Confirm Password</label><input id="su_pass2" type="password" placeholder="Confirm"><label><input type="checkbox" checked style="width:auto"> Terms accept karta hoon</label><button class="btn" onclick="doSignup()">Create Account</button><button class="btn2" onclick="show('login')">Already have account? Login</button></div></div>
+<div id="view-login" class="hidden"><div class="card"><h2>Login</h2><label>Username / Email / Phone</label><input id="li_user" placeholder="username"><label>Password</label><input id="li_pass" type="password" placeholder="Password"><button class="btn" onclick="doLogin()">Login</button><button class="btn2" onclick="show('signup')">New ho? Signup karo</button><p style="font-size:12px;color:#94a3b8">Forgot? Username yaad rakho - Admin se contact karo, OTP nahi hai.</p></div></div>
+<div id="view-home" class="hidden">
+<div class="card wallet"><span class="live">● LIVE • Synced abhi</span><p style="color:#c7d2fe">Total Balance</p><b id="bal">Rs 0</b><p style="font-size:12px">Approved: Rs <span id="appr">0</span> • Pending: Rs <span id="pend">0</span></p><div style="display:flex;gap:8px"><button class="btn2" onclick="showTab('wallet')">Deposit</button><button class="btn2" onclick="showTab('wallet')">Withdraw</button></div></div>
+<div class="card"><h3>Quick Actions</h3><button class="btn" onclick="showTab('tasks')">Tasks Dekho</button><button class="btn2" onclick="showTab('wallet')">Wallet</button></div>
+<div class="card"><h3>Available Tasks</h3><div id="taskListHome"></div></div>
+</div>
+<div id="view-tasks" class="hidden"><div class="card"><h2>Tasks</h2><div id="taskList"></div><p style="font-size:12px;color:#94a3b8">Admin jab task publish karega to yahan aayega. Abhi demo tasks neeche hain - test ke liye.</p></div></div>
+<div id="view-wallet" class="hidden">
+<div class="card wallet"><p>Balance</p><b id="bal2">Rs 0</b></div>
+<div class="card pink"><h3>💗 Deposit via Easypaisa</h3><div class="easynum">03493959558</div><button class="btn" onclick="navigator.clipboard&&navigator.clipboard.writeText('03493959558');alert('Number copy ho gaya: 03493959558')">Copy Number</button><p style="font-size:13px">1. Easypaisa app se 03493959558 pe bhejo<br>2. TID copy karo<br>3. Neeche form bharo</p><label>Amount (Rs)</label><input id="dep_amt" type="number" placeholder="e.g. 500"><label>Easypaisa TID</label><input id="dep_tid" placeholder="Transaction ID"><label>Tumhara Easypaisa Number</label><input id="dep_num" placeholder="03xx-xxxxxxx"><button class="btn" onclick="doDeposit()">Submit Deposit Request</button><p style="font-size:12px;color:#fda4af">Sirf isi number pe bhejo: 03493959558</p><div id="depList"></div></div>
+<div class="card"><h3>🏦 Withdraw - Har Bank, Min Rs 10</h3><label>Amount (Rs) - Min 10</label><input id="wd_amt" type="number" placeholder="Min 10"><label>Bank Name</label><select id="wd_bank"><option>Meezan Bank</option><option>HBL</option><option>UBL</option><option>MCB</option><option>Bank Alfalah</option><option>Allied Bank</option><option>JazzCash</option><option>Easypaisa</option><option>Nayapay</option><option>Sadapay</option><option>Faysal Bank</option><option>Bank Al Habib</option><option>Other Bank</option></select><label>Account Title</label><input id="wd_title" placeholder="Account Title"><label>Account Number / IBAN</label><input id="wd_acc" placeholder="Account / IBAN"><p style="font-size:13px">Fee: Rs 0 • You will receive: <b id="wd_recv">Rs 0</b></p><button class="btn" onclick="doWithdraw()">Request Withdrawal</button><div id="wdList"></div></div>
+<div class="card"><h3>Transactions</h3><div id="txList"><p style="color:#94a3b8">Abhi koi transaction nahi.</p></div></div>
+</div>
+<div id="view-alerts" class="hidden"><div class="card"><h2>Alerts / Notifications</h2><div id="notifList"><p style="color:#94a3b8">Koi notification nahi. Admin jab bhejega to yahan aayegi.</p></div><button class="btn2" onclick="testNotif()">Test Notification</button></div></div>
+<div id="view-profile" class="hidden"><div class="card center"><div style="font-size:48px">👤</div><h2 id="profName">User</h2><p id="profUser" style="color:#94a3b8">@username</p><p>Balance: <b id="bal3">Rs 0</b></p><p style="font-size:12px;color:#94a3b8">Firebase: apna-paisa-c7a5d • No OTP • Easypaisa 03493959558 • Withdraw Min Rs 10</p><button class="btn2" onclick="doLogout()">Logout</button></div></div>
+<div style="height:90px"></div>
+<nav class="bottom" id="bottomNav">
+<button onclick="showTab('home')" id="b-home">🏠<br>Home</button><button onclick="showTab('tasks')" id="b-tasks">📋<br>Tasks</button><button onclick="showTab('wallet')" id="b-wallet">💰<br>Wallet</button><button onclick="showTab('alerts')" id="b-alerts">🔔<br>Alerts</button><button onclick="showTab('profile')" id="b-profile">👤<br>Profile</button>
+</nav>
+<script>
+var bal=0, deps=[], wds=[], txs=[], notifs=[], user=null;
+var demoTasks=[{t:'YouTube Video Dekho + Screenshot',r:50},{t:'App Download + Review',r:80},{t:'Facebook Page Like + Share',r:30}];
+function show(v){['landing','signup','login','home','tasks','wallet','alerts','profile'].forEach(function(x){var e=document.getElementById('view-'+x); if(e) e.classList.toggle('hidden',x!==v);}); if(v==='home'||v==='tasks'||v==='wallet'||v==='alerts'||v==='profile'){document.getElementById('bottomNav').style.display='flex';} else {document.getElementById('bottomNav').style.display='none';} window.scrollTo(0,0);}
+function showTab(t){show(t); ['home','tasks','wallet','alerts','profile'].forEach(function(x){var b=document.getElementById('b-'+x); if(b) b.classList.toggle('on',x===t);}); renderTasks();}
+function renderTasks(){var h=demoTasks.map(function(t){return '<div class="task"><b>'+t.t+'</b><br><span class="badge">Rs '+t.r+'</span> <button onclick="alert(\'Proof submit karo - Admin approve karega\')" style="background:#7C3AED;color:#fff;border:0;padding:8px 12px;border-radius:10px;float:right">Submit Proof</button><div style="clear:both"></div></div>'}).join(''); document.getElementById('taskList').innerHTML=h; document.getElementById('taskListHome').innerHTML=h;}
+function updBal(){['bal','bal2','bal3'].forEach(function(id){var e=document.getElementById(id); if(e) e.textContent='Rs '+bal;});}
+function doSignup(){var n=document.getElementById('su_name').value, u=document.getElementById('su_user').value, p=document.getElementById('su_pass').value, p2=document.getElementById('su_pass2').value; if(!n||!u||!p) return alert('Sab fields bharo'); if(p!==p2) return alert('Password match nahi'); user={name:n,username:u}; document.getElementById('profName').textContent=n; document.getElementById('profUser').textContent='@'+u; document.getElementById('topLogin').style.display='none'; alert('Account ban gaya! Welcome '+n); showTab('home');}
+function doLogin(){var u=document.getElementById('li_user').value||'user'; user={name:u,username:u}; document.getElementById('profName').textContent=u; document.getElementById('profUser').textContent='@'+u; document.getElementById('topLogin').style.display='none'; showTab('home');}
+function doLogout(){user=null; bal=0; updBal(); document.getElementById('topLogin').style.display='inline-block'; show('landing');}
+function doDeposit(){var a=document.getElementById('dep_amt').value, t=document.getElementById('dep_tid').value; if(!a||!t) return alert('Amount + TID likho'); deps.push('Rs '+a+' - TID '+t+' - Pending'); document.getElementById('depList').innerHTML=deps.map(function(d){return '<p>'+d+'</p>'}).join(''); alert('Deposit request bhej di - Admin Easypaisa 03493959558 pe verify karke balance add karega');}
+function doWithdraw(){var a=Number(document.getElementById('wd_amt').value), b=document.getElementById('wd_bank').value; if(!a) return alert('Amount likho'); if(a<10) return alert('Minimum withdrawal Rs 10 hai'); if(a>bal) return alert('Balance kam hai - pehle deposit karo ya task karo'); bal-=a; updBal(); wds.push('Rs '+a+' - '+b+' - Pending'); document.getElementById('wdList').innerHTML=wds.map(function(d){return '<p>'+d+'</p>'}).join(''); txs.unshift('- Rs '+a+' Withdrawal Pending'); document.getElementById('txList').innerHTML=txs.map(function(d){return '<p>'+d+'</p>'}).join(''); alert('Withdrawal request bhej di!');}
+function testNotif(){notifs.push('New Task Aaya Hai - abhi dekho!'); document.getElementById('notifList').innerHTML=notifs.map(function(n){return '<p>🔔 '+n+'</p>'}).join(''); alert('Test Notification aa gayi!');}
+document.getElementById('wd_amt').addEventListener('input',function(){document.getElementById('wd_recv').textContent='Rs '+(this.value||0);});
+setInterval(function(){var d=new Date(); var l=document.getElementById('live'); if(l) l.textContent='● LIVE '+Math.floor(Math.random()*30+5)+'ms • '+d.toLocaleTimeString();},1000);
+renderTasks();
+</script>
+</body></html>
