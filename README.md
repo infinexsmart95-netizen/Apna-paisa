@@ -1,35 +1,39 @@
-APNA PAISA - BACKEND (server.js) - FULLY HEAVY FAST REALTIME
-Run (2 min)
-cd apna-paisa-backend
-npm install
-cp .env.example .env   # fill JWT secrets + ADMIN_USER / ADMIN_PASS + FIREBASE_SERVICE_ACCOUNT
-npm run dev
-# Backend: http://localhost:5000  | Health: /api/health
-Realtime kaise kaam karta hai (0000.00000000 ms feel)
-Frontend socket.io-client se connect: io('http://localhost:5000')
-Login ke baad socket.emit('join', {userId, role}) -> user apne room user:<id> me, admin admins room me.
-Admin kuch kare (task publish, approve, notify) -> server usi millisecond io.emit / io.to(user:id).emit karta hai. Frontend ko refresh ki zaroorat nahi.
-socket.on('ping:ms') se latency measure hoti hai - header me LIVE xx ms dikhta hai.
-Firebase RTDB listener: Firebase me koi write ho to server usko Socket.io pe forward karta hai.
-Frontend ko connect karna
-User App (/index.html) me:
+APNA PAISA - VERCEL FIX (GitHub wali galti)
+Masla kya tha?
+Tumhare GitHub repo me ye 5 files hain:
 
-import { io } from "socket.io-client";
-const socket = io("https://YOUR-BACKEND.onrender.com");
-socket.emit("join", { userId, role: "user" });
-socket.on("wallet:update", ({balance, tx}) => setBalance(balance));
-socket.on("notification:new", (n) => showToast(n));
-socket.on("task:new", (t) => prependTask(t));
-Admin App (/admin.html) me same, role: "admin", socket.on("live:new_submission") etc.
+Admin.html
+Pakage.json <-- YE PROBLEM
+README.md
+index.html
+server.js <-- YE PROBLEM
+Vercel ne package.json + server.js dekh ke samjha ye Node.js app hai,
+isliye usne index.html ko website ki tarah serve nahi kiya - code dikhaya.
 
-Deploy
-Backend: Render / Railway / VPS - npm start, env vars set karo.
-Frontend User: Vercel -> apnapaisa.vercel.app, env VITE_API_URL=https://backend...
-Frontend Admin: Vercel alag project -> apna-paisa-admin.vercel.app
-Firebase: Service Account JSON ko env me daalo, kabhi frontend me mat daalo.
-Security
-Passwords bcrypt 12 rounds, JWT 7 days, alag ADMIN_JWT_SECRET
-Rate limiting, Helmet, CORS whitelist
-Wallet sirf server se - frontend balance kabhi trust nahi karta
-Har financial action Audit Log me
-No OTP - direct signup/login (tumhare kehne par OTP hataya)
+Fix - 2 tareeqe, 1 chuno:
+Tareeqa A - SAB SE AASAN (Recommended)
+Isi repo se 2 files DELETE karo:
+
+GitHub pe jao > server.js > ... > Delete file > Commit
+GitHub pe jao > Pakage.json > ... > Delete file > Commit
+Sirf ye 3 files rakho: index.html, Admin.html, vercel.json (neeche wali)
+Vercel > Deployments > ... > Redeploy
+Ho gaya - ab apna-paisa.vercel.app pe app chalega.
+Backend (server.js) ko Vercel pe MAT rakho.
+Backend alag jagah deploy karo: Render.com / Railway
+
+Naya repo banao: apna-paisa-backend
+Usme sirf server.js + package.json + .env rakho
+Render pe Web Service banao, us repo se connect karo.
+Tareeqa B - Agar server.js isi repo me rakhna hai
+To vercel.json wali file repo me daalo (ye file sath di hai).
+Phir bhi Vercel kabhi kabhi confuse hota hai, isliye Tareeqa A best hai.
+
+vercel.json kya karta hai?
+/ ko -> /index.html
+/admin ko -> /admin.html
+Har request ko HTML ki tarah serve karta hai, code ki tarah nahi.
+Check karne ka tareeqa
+apna-paisa.vercel.app kholo - app dikhna chahiye, code nahi
+apna-paisa.vercel.app/admin kholo - Admin Panel dikhna chahiye
+Agar phir bhi code dikhe to: Vercel > Project > Settings > General > Framework Preset = Other, Root = ./ , phir Redeploy.
